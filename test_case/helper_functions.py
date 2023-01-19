@@ -5,9 +5,13 @@ from constants import *
 
 def onehot_dataset(data):
     encoder = OneHotEncoder(sparse_output=False)
-    onehot_data = encoder.fit_transform(data.loc[:, categorical_columns].values)
+    onehot_data = encoder.fit_transform(data)
     onehot_data = pd.DataFrame(onehot_data)
-    data.drop(categorical_columns, axis=1, inplace=True)
-    new_data = pd.concat((data, onehot_data), axis=1)
 
-    return encoder, new_data
+    return encoder, onehot_data
+
+def scale_dataset(data):
+    scaler = StandardScaler()
+    scaled_data = scaler.fit_transform(data)
+
+    return scaler, scaled_data

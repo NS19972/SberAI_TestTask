@@ -9,10 +9,12 @@ from sklearn.metrics import *
 
 from models import *
 
-data = pd.read_csv('test.csv', index_col=0)
+if __name__ == '__main__':
+    data = pd.read_csv('test.csv', index_col=0)
 
-classifier = LGBM_model(data, use_class_weights=True)
+    #Выбираем модель из [LGB, GradientBoost, NeuralNetwork]
+    classifier = GradientBoost(data)
 
-classifier.fit()
-classifier.validate()
-classifier.test()
+    classifier.fit()
+    classifier.validate(show_confusion_matrix=True)
+    classifier.test(show_confusion_matrix=True)
