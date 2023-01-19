@@ -55,5 +55,5 @@ if __name__ == '__main__':
 
     # Применяем любые желаемые функции для визуализации данных
     visualize_correlation_heatmap(dataset)
-    create_histogram(dataset, 'feature_0')
+    create_histogram(dataset, 'feature_0')  # <--- Не забываем здесь указать конкретный столбец, который хотим визуализировать
     visualize_class_distribution(dataset)

@@ -44,7 +44,8 @@ class LGB:
                               if use_class_weights else None
 
         # Создаем класс модели (гиперпараметры были подобраны вручную)
-        self.model = LGBMClassifier(class_weight=self.class_weights, max_depth=5, *args, **kwargs)
+        self.model = LGBMClassifier(learning_rate=1e-1, class_weight=self.class_weights, min_child_samples=10,
+                                    max_depth=5, *args, **kwargs)
 
     # Метод для обучения алгоритма
     def fit(self):
@@ -79,7 +80,7 @@ class LGB:
             plt.title(f"Confusion Matrix for {subset_name} Subset", fontsize=14)  # Устанавливаем заголовок
             plt.show()  # Отображаем результат
 
-        return f1_metric # Возвращаем F1 метрику (для валидационной выборки)
+        return f1_metric  # Возвращаем F1 метрику (для валидационной выборки)
 
     # Метод для оценки работы модели на валидационной выборки
     def validate(self, show_confusion_matrix=False):
@@ -150,11 +151,16 @@ class NeuralNetwork(LGB):
         self.onehot_encoder, X_onehot = onehot_dataset(self.x_train[:, len(scalar_columns):])  # onehot-кодируем все категориальные фичи, записываем объект кодировщика
         self.x_train = np.concatenate((X_scaled, X_onehot), axis=1)  # Конкатенируем все скалярные и категориальные фичи в один массив
 
-        # Создаем архитектуру нейронной сети - глубокая модель без Dropout, BatchNormalization, или регуляризации показала наилучшие результаты на валидационной выборке
+        # Создаем архитектуру нейронной сети - глубокая модель без BatchNormalization или регуляризации показала наилучшие результаты на валидационной выборке
+        # Практика показывает что слои Dropout оказывает положительное воздействие на F1 score
         self.model = Sequential([Dense(512, activation='relu', input_shape=(self.x_train.shape[1],)),
+                                 Dropout(0.5),
                                  Dense(256, activation='relu'),
+                                 Dropout(0.5),
                                  Dense(128, activation='relu'),
+                                 Dropout(0.5),
                                  Dense(64, activation='relu'),
+                                 Dropout(0.5),
                                  Dense(1, activation='sigmoid')])
 
         # Задаем относительные веса классов
