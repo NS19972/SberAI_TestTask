@@ -12,8 +12,8 @@ from models import *
 if __name__ == '__main__':
     data = pd.read_csv('test.csv', index_col=0)
 
-    #Выбираем модель из [LGB, GradientBoost, NeuralNetwork]
-    classifier = GradientBoost(data)
+    #Выбираем модель из [LGB, GradientBoost, RandomForest, NeuralNetwork]
+    classifier = LGB(data)
 
     classifier.fit()
     classifier.validate(show_confusion_matrix=True)

@@ -4,7 +4,6 @@ import seaborn as sns
 import sklearn
 import matplotlib.pyplot as plt
 
-data = pd.read_csv('test.csv', index_col=0)
 
 def visualize_correlation_heatmap(data, method='spearman'):
     plt.figure(figsize=(14, 8))
@@ -12,6 +11,7 @@ def visualize_correlation_heatmap(data, method='spearman'):
     sns.heatmap(correlation_matrix, annot=True, vmin=-1, vmax=1)
     plt.title("Матрица корреляции")
     plt.show()
+
 
 def create_histogram(data, column_name):
     assert column_name in data.columns, 'specified column not found in dataset.'
@@ -24,6 +24,20 @@ def create_histogram(data, column_name):
     plt.grid()
     plt.show()
 
-#visualize_correlation_heatmap(data)
 
-#create_histogram(data, 'feature_0')
+def visualize_class_distribution(data):
+    plt.figure(figsize=(14, 8))
+    plt.bar(('Class 0', 'Class 1'), np.bincount(data['target']), alpha=0.5, color='orange')
+    plt.title(f'Class Frequency Graph', fontsize=16)
+    plt.xlabel('Class Name', fontsize=12)
+    plt.ylabel("Times encountered in dataset", fontsize=12)
+    plt.grid()
+    plt.show()
+
+
+if __name__ == '__main__':
+    data = pd.read_csv('test.csv', index_col=0)
+
+    #visualize_correlation_heatmap(data)
+    #create_histogram(data, 'feature_0')
+    visualize_class_distribution(data)
